@@ -1,16 +1,25 @@
-import sqlalchemy as sa
 from pydantic import BaseModel, Field
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
 
 from app.database.core import Base
+from app.subscription.models import subscriptions
 
 
 class User(Base):
     __tablename__ = 'users'
-    id = sa.Column(sa.Integer, primary_key=True)
-    username = sa.Column(sa.String, unique=True, nullable=False)
-    password_hash = sa.Column(sa.String, nullable=False)
-    name = sa.Column(sa.String)
-    bio = sa.Column(sa.String)
+    id = Column(Integer, primary_key=True)
+    username = Column(String, unique=True, nullable=False)
+    password_hash = Column(String, nullable=False)
+    name = Column(String)
+    bio = Column(String)
+    subscribers = relationship(
+        'User',
+        secondary=subscriptions,
+        primaryjoin=(id == subscriptions.c.user_id),
+        secondaryjoin=(id == subscriptions.c.subscriber_id),
+        backref='subscriptions'
+    )
 
 
 class UserBase(BaseModel):
@@ -28,3 +37,5 @@ class UserCreate(UserBase):
 
 class UserRead(UserBase):
     pass
+    # subscribers_count: int
+    # subscriptions_count: int
