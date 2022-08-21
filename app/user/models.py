@@ -20,6 +20,7 @@ class User(Base):
         secondaryjoin=(id == subscriptions.c.subscriber_id),
         backref='subscriptions'
     )
+    posts = relationship('Post', back_populates='user')
 
 
 class UserBase(BaseModel):
