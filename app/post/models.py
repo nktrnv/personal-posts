@@ -6,6 +6,7 @@ from sqlalchemy.orm import relationship
 
 from app.database.core import Base
 from app.user.models import UserRead
+from app.like.models import likes
 
 
 class Post(Base):
@@ -16,6 +17,8 @@ class Post(Base):
     created_at = Column(DateTime, nullable=False, default=datetime.now)
     user_id = Column(ForeignKey('users.id'), nullable=False)
     user = relationship('User', back_populates='posts')
+    liked_users = relationship(
+        'User', secondary=likes, back_populates='liked_posts')
 
 
 class PostBase(BaseModel):

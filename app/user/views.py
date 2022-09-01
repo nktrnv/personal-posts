@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Depends, UploadFile, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 
-from .models import UserRead
+from .models import UserRead, UserCreate
 from app.database.core import Session, get_session
 from . import service
 
@@ -14,4 +14,10 @@ def get_user(username: str, session: Session = Depends(get_session)):
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     return user
+
+
+@user_router.post('/', response_model=UserRead)
+def sign_up(user_in: UserCreate, session: Session = Depends(get_session)):
+    """Register user."""
+    return service.create(session=session, user_in=user_in)
 

@@ -8,7 +8,7 @@ from . import service
 subscription_route = APIRouter()
 
 
-@subscription_route.post('/{username}/subscribe')
+@subscription_route.post('/{username}/subscription')
 def subscribe(username: str, session: Session = Depends(get_session)):
     """Subscribe to a user by username."""
     current_user_id = 1
@@ -19,7 +19,7 @@ def subscribe(username: str, session: Session = Depends(get_session)):
         session=session, user=user, subscriber_id=current_user_id)
 
 
-@subscription_route.post('/{username}/unsubscribe')
+@subscription_route.delete('/{username}/subscription')
 def unsubscribe(username: str, session: Session = Depends(get_session)):
     """Unsubscribe from a user by username."""
     current_user_id = 1
